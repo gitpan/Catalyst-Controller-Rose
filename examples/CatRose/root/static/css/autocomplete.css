@@ -1,0 +1,36 @@
+/* scriptaculous autocomplete ajax style 
+   we use 'span' instead of 'div' to avoid
+   some default styles for 'div' that other .css might define
+*/
+
+span.auto_complete {
+width:350px;        /* assumes input field size=30 */
+background:#fff;
+z-index:9049;   /* over top of whatever else */
+display: block;
+overflow:hidden;    /* no scroll bars - IE7 bug */
+border:1px solid #888;
+}
+
+span.auto_complete ul {
+width:100%;
+list-style-type:none;
+margin:0;
+padding:0;
+background:#fff;
+}
+
+span.auto_complete ul li {
+margin:0;
+padding:3px;
+}
+
+span.auto_complete ul li.selected {
+background-color:#ffb;
+}
+
+span.auto_complete ul strong.highlight {
+color:#800;
+margin:0;
+padding:0;
+}

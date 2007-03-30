@@ -1,0 +1,16 @@
+CatRose - example Catalyst application for using Catalyst::Controller::Rose::*
+          and Catalyst::Model::RDBO
+
+The basic Model is albums and songs, in a many-to-many relationship.
+
+1. init the database:
+
+ sqlite3 catrose.db < catrose.sql
+
+2. test the application:
+
+ perl script/catrose_server.pl
+
+3. monkey with the app via your browser.
+
+

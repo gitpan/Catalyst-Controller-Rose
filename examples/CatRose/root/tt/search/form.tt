@@ -1,0 +1,64 @@
+[% 
+    # generic search form for use with AL::Catalyst::Controller::Search
+
+    page.css.push('form');
+
+%]
+
+<div id="search">
+ <form  action="[% search.form.action %]"
+        method="[% search.form.method || 'get' %]"
+        />
+    
+    <fieldset>
+     <legend>[% search.form.title || 'Search' %]</legend>
+       
+    [%
+       FOR f = search.form.fields;
+       
+        IF (form.field(f).autocomplete);
+            u = form.field(f).url;
+            USE url = url( c.uri_for( u.0 ), u.1 );
+            PROCESS tt/autocomplete.tt
+                input = {
+                    label = form.field(f).xhtml_label
+                    url   = url
+                    id    = f
+                    value = form.field(f).input_value
+                    };
+        ELSE;
+            form.field(f).xhtml_label;
+            IF search.form.dates.exists(f) && form.field(f).input_value == 0;
+                _null = form.field(f).input_value('');
+            END;
+            form.field(f).xhtml;
+        END;
+        
+        "<br />";
+        
+       END;
+       
+    %]
+    
+    <div id="error"></div>
+    
+    <label></label>    
+    <input type="submit" name="search" value="Search" />
+     
+    <span class="input">
+     &nbsp;
+     Use a <b>*</b> or <b>%</b> as a wildcard to match partial values.
+    </span>
+    
+   </fieldset>
+ </form>
+ 
+ [% IF search.results.size %]
+    [% PROCESS tt/search/results.tt %]
+ [% ELSIF search.query %]
+    <div style="text-align:center">
+     No results for <b>[% search.query_str %]</b>
+    </div>
+ [% END %]
+
+</div>

@@ -1,0 +1,44 @@
+  
+ <div class="pager">
+   Result page:
+   <ul class="pager">
+ [% UNLESS search.pager.current_page == search.pager.first_page %]
+  <li class="prev">
+   <a href="[% urls.search_order _ ";page=" _ search.pager.previous_page %]">
+   &#171;&nbsp;Prev</a>
+  </li>
+  [% IF search.pager.current_page > 1 %]
+  <li class="first">
+   <a href="[% urls.search_order _ ";page=1" %]">1</a>
+   [% IF search.pager.current_page > (search.pager.first_page + ( search.pager.pages_per_set / 2 )) %]
+   &nbsp;...&nbsp;[% END %]
+  </li>
+  [% END %]
+ [% END %]
+ [% FOR p = search.pager.pages_in_set %]
+  [% NEXT IF p != search.pager.current_page && p == 1 %]
+  [% NEXT IF p != search.pager.current_page && p == search.pager.last_page %]
+  [% IF p == search.pager.current_page %]
+   <li id="page_[% p %]" class="current">[% p %]</li>
+  [% ELSE %]
+   <li id="page_[% p %]">
+    <a href="[% urls.search_order _ ";page=" _ p %]">[% p %]</a>
+   </li>
+  [% END %]
+ [% END %]
+ [% UNLESS search.pager.current_page == search.pager.last_page %]
+  [% IF search.pager.current_page < (search.pager.last_page) %]
+   <li class="last">
+   [% IF search.pager.current_page < (search.pager.last_page - (search.pager.pages_per_set / 2) ) %]&nbsp;...&nbsp;[% END %]
+    <a href="[% urls.search_order _ ";page=" _ search.pager.last_page %]">
+     [% search.pager.last_page %]
+    </a>
+   </li>
+  [% END %]
+  <li class="next">
+   <a href="[% urls.search_order _ ";page=" _ search.pager.next_page %]">Next&nbsp;&#187;</a>
+  </li>
+ [% END %]
+ 
+   </ul>
+ </div>

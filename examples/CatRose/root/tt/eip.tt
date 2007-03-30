@@ -1,0 +1,160 @@
+[% # edit-in-place table where each row = one record
+   # each 'row' is really two <tr> tagsets, one as a form, the other read-only
+   # clicking on the buttons toggles display between the two
+   #
+   # See Catalyst::Controller::Rose::EIP 
+   # for the data structure of the 'eip' object
+   #
+   # column widths are hardcoded px to prevent form elements from
+   # altering width on toggle ("jump" effect)
+   #
+   
+    DEFAULT id_joiner = '.';
+    DEFAULT rc        = 1;
+        
+    page.js.push('atomic_eip', 'json');
+    page.css.push('eip');
+   
+    USE Math;
+
+    # max pixels sum of all colwidths -- just for ease on eyes.
+    # NOTE that last column is for buttons and is static,
+    # which gives total table width of 800px
+    my = {};    # this .tt stash
+    my.table_width = table_width || 680;  
+    my.a               = my.table_width / eip.tmpl.cols.size;
+    my.ave_colwidth    = Math.int( my.a );
+   
+    # to give sense of proportion, we use 'len' if defined, or _ave_colwidth if not
+    # and then move each column.width till we have a sum of <= _table_width
+    
+    my.colsum = 0;
+    eip.auto = {};  # cache which cols are autocompleting
+    FOREACH column = eip.tmpl.cols;
+        IF column.len.defined;  # if len is defined, use it *10
+            column.width = column.len * 10;
+        ELSE;
+            column.width = my.ave_colwidth;
+        END;
+        my.colsum = my.colsum + column.width;
+        IF column.auto;
+            cn = column.name;
+            eip.auto.$cn = 1;
+            u = column.auto;
+            USE url = url( c.uri_for( u.0 ), u.1 );
+            column.auto = url;
+            page.js.push('prototype',
+                        'scriptaculous/effects', 
+                        'scriptaculous/controls');
+            page.css.push('autocomplete');
+        END;
+    END;
+        
+    WHILE (my.colsum > my.table_width);
+        FOREACH column = eip.tmpl.cols;
+            column.width = column.width - 1;
+            my.colsum = my.colsum - 1;
+        END;
+    END;
+        
+    WHILE (my.colsum < my.table_width);
+        FOREACH column = eip.tmpl.cols;
+            column.width = column.width + 1;
+            my.colsum = my.colsum + 1;
+        END;
+    END;
+    
+    eip.widths = {};
+    FOR col = eip.tmpl.cols;
+        n = col.name;
+        eip.widths.$n = col.width / 10;
+    END;
+    
+    
+%]
+
+<div class="eip">
+
+ <table id="[% eip.name %]" class="eip">
+  <colgroup>
+  [% FOREACH col = eip.tmpl.cols %]
+   <col width="[% col.width %]" />
+  
+  [% END %]
+   <col width="120" />
+  </colgroup>
+ 
+ <thead>
+  <tr>
+ [% FOREACH col = eip.tmpl.cols %]
+   <th nowrap="nowrap">[% col.label %]</th>
+ [% END %]
+   <th nowrap="nowrap" style="padding-left:0">
+        <input  type="button" 
+                id="addbutton"
+                value="new &#43;" 
+                class="eip"
+                onclick="[% eip.name %].add_row()"
+                />
+   </th>
+  </tr>
+ </thead>
+ 
+ <tbody style="display:none"
+        id="[% eip.name %][% id_joiner %]tmpl">
+ 
+  [% PROCESS tt/eip_tbody.tt
+        row = eip.add_row
+  %]
+ 
+ </tbody>
+  
+[% rc = 1; 
+   FOREACH row = eip.rows; 
+   rc = rc + 1; 
+   %]
+ <tbody id="[% eip.name %][% id_joiner %][% row.pk | html %]">
+ [% PROCESS tt/eip_tbody.tt %]
+ </tbody>
+[% END %]
+
+</table>
+
+<!--
+<input  type="button" 
+                id="debugEvents"
+                value="debugEvents" 
+                class="eip"
+                onclick="atomdebug.debugEvents()"
+                />
+-->
+
+</div><!-- end eip -->
+
+<script>
+<!--
+    var [% eip.name %] = new Atomic.eip(
+                {
+                    tid: '[% eip.name %]',
+                    tmpl: [% eip.tmpl.as_json %],
+                    url: '[% eip.url %]',
+                    spin_url: '[% page.static %]/images/spinner.gif',
+                    is_ie: '[% is_IE %]',
+                    id_joiner: '[% id_joiner %]'
+                    [% IF (c.debug && c.config.js_debugger) %]
+                    ,
+                    debug: '[% eip.name %]js_debug'
+                    [% END %]
+                
+                }
+                );
+                
+    [% eip.name %].show_json( [% eip.name %].tmpl );
+    
+    if(!adebug)
+        var adebug = new Atomic.debug('[% debug_id %]');
+                
+                
+-->
+</script>
+

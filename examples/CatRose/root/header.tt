@@ -1,0 +1,56 @@
+ <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <title>[% page.title || c.config.name %]</title>
+
+    <!-- served from [% page.host %] -->
+
+
+    <link   rel="shortcut icon" href="[% page.static %]/images/favicon.ico" 
+            type="image/x-icon" />
+    
+    [% FOREACH sheet IN page.css.unique %]
+        <link   rel="stylesheet" 
+                type="text/css" 
+                media="all" 
+                href="[% page.static %]/css/[% sheet %].css" />
+        
+    [% END %]
+    
+    [% FOREACH js IN page.js.unique;
+         url = js.replace('\.js$','');     # strip any existing .js
+         url = url _ '.js';
+    %]
+     <script type="text/javascript" src="[% page.static _ '/js/' _ url %]">
+     </script>
+     
+    [% END %]
+    
+    [% IF page.base_url;
+        # make sure the http:// wasn't already prepended
+        %]
+        <base href="http://[% page.base_url.replace('^http://','') %]" >
+        </base>
+    [% END %]
+    
+  [% IF page.meta;
+        FOREACH m IN page.meta;
+            v = m.each;
+            name = v.shift;
+            cont = v.shift;
+                        
+            SWITCH name %]
+            
+            [% CASE "refresh" %]
+            <meta http-equiv="refresh" content="[% cont %]" />
+            
+            [% CASE %]
+            <meta name="[% name %]" content="[% cont %]" />
+            
+            [% END # end SWITCH %]
+            
+        [% END # end FOR %]
+        
+  [% END # end IF %]
+
+ </head>

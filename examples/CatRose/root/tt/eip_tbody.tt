@@ -1,0 +1,105 @@
+[% # eip tbody contents 
+
+    DEFAULT id_joiner = '.';
+    DEFAULT rc        = 2;  # row counter
+    
+%]
+[% 
+
+    ##################### read only row ########################## 
+
+%]
+  <tr id="[% eip.name %][% id_joiner %][% row.pk | html %][% id_joiner %]ro" 
+  [% IF rc % 2 %]class='alternate'[% END %]>
+   [% FOREACH cell = row.cells %]
+   
+    [% name = cell.form.name || cell.name;
+       id = [ eip.name, row.pk, name, 'ro' ]
+    %]
+    
+    <td nowrap="nowrap" 
+        id="[% id.join( id_joiner ) | html %]"
+        onclick="[% eip.name %].edit(
+            '[% eip.name %][% id_joiner %][% row.pk | html %]',
+            '[% eip.name %][% id_joiner %][% cell.form.id | html %]')" 
+        [% IF cell.title %] title="[% cell.title | html %]" [% END %]
+        >
+    [% IF cell.form.isa('Rose::HTML::Form::Field::Password');
+        '********';
+       ELSE;
+        cell.form.output_value | html;
+       END;
+        %]</td>
+   [% END %]
+    <td nowrap="nowrap" 
+        onclick="[% eip.name %].edit('[% eip.name %][% id_joiner %][% row.pk | html %]')" >
+      <input type="button" 
+             id="[% eip.name %][% id_joiner %][% row.pk %][% id_joiner %]edit" 
+             value="edit" 
+             class="eip" 
+             />
+    </td>
+  </tr>
+[% 
+    ########################  form row  #########################
+%]
+  <tr id="[% eip.name %][% id_joiner %][% row.pk | html %][% id_joiner %]form" 
+      style='display:none' 
+      class='active'>
+   [% FOREACH cell = row.cells;
+     newid = [ eip.name, cell.form.id ];
+     _foo = cell.form.id( newid.join(id_joiner) );
+     %]
+    <td nowrap="nowrap">
+      [% IF cell.form.isa('Rose::HTML::Form::Field::Hidden');
+           cell.form.input_value;
+           cell.form.xhtml_field;
+         ELSIF  cell.readonly;
+           # make it hidden
+           # and allow for 'link' and 'title' attributes
+           IF cell.link;
+            '<a class="eip" href="' _ cell.link _ '"';
+            IF cell.title;
+             ' title="' _ cell.title _ '"';
+            END;
+            '>';
+           END;
+           cell.form.input_value | html;
+           IF cell.link;
+            '</a>';
+           END;
+           
+         %]
+         <input type="hidden"
+                name="[% cell.form.name %]"
+                value="[% cell.input_value %]"
+                id="[% cell.form.id %]"
+                class="[% cell.form.class %]"
+                />
+        [%
+         ELSE;
+         
+            IF eip.auto.exists( cell.name );
+                _null = cell.form.size( 30 );   # CSS needs this width
+            ELSE;
+                _null = cell.form.size( eip.widths.item( cell.form.name ) );
+            END;
+            
+            cell.form.xhtml_field;
+            
+            IF eip.auto.exists( cell.name );
+              %]
+              <span id="[% cell.form.id %]_auto_complete" 
+                    class="auto_complete"></span>
+             [% 
+            END;
+            
+         END;
+      %]
+    </td>
+   [% END %]
+    <td nowrap="nowrap" 
+        id="[% eip.name %][% id_joiner %][% row.pk | html %][% id_joiner %]buttons">
+     [% # buttons populated via js %]
+    </td>
+  </tr>

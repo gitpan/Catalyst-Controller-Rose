@@ -1,0 +1,17 @@
+[% # common URLs
+    # page.static defined in main config
+
+    urls = {};
+    urls.asc            = page.static _ '/images/down_arrow_small.gif';
+    urls.asc_img        = "<span class='sort_arrow'>" _
+                        "<img align='bottom' src='" _ urls.asc _ "' 
+                            alt='sorted in ascending order' />" _
+                        "</span>";
+    urls.desc           = page.static _ '/images/up_arrow_small.gif';
+    urls.desc_img       = "<span class='sort_arrow'>" _
+                        "<img align='bottom' 
+                            src='" _ urls.desc _ "' 
+                            alt='sorted in descending order' />" _
+                        "</span>";
+                            
+%]

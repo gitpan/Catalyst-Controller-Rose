@@ -1,0 +1,93 @@
+[%
+  menu = {
+    id = 'navmenu',
+    items = [
+        { href = '/',
+          txt  = 'Home'
+        },
+        { href = '/song/',
+          txt  = 'Songs',
+          items = [
+            { href = '/song/search/',
+              txt  = 'Search'
+            },
+            { href = '/song/create/',
+              txt  = 'Create New'
+            }
+          ]
+        },
+        { href = '/album/',
+          txt  = 'Albums',
+          items = [
+            { href = '/album/search/',
+              txt  = 'Search'
+            },
+            { href = '/album/create/',
+              txt  = 'Create New'
+            }
+          ]
+        }
+      ]
+    };
+    
+    
+    # pure CSS flyout menus
+    # menu object looks like:
+    # menu = {
+    #   items = [
+    #       { href = '/uri/some/where', txt = 'Some Where', class = 'active' },
+    #       { href = '/uri/some/else' , txt = 'Some Else',
+    #           items = [
+    #               { href = '/uri/some/else/1', txt = 'Some Else 1' },
+    #               { href = '/uri/some/else/2', txt = 'Some Else 2' }
+    #               ]
+    #       }
+    #   ],
+    #   id = 'navmenu'  # default - optional key
+    # }
+    # c.uri_for is run on every href, so plain uris are ok.
+    #
+    # NOTE that we INCLUDE in order to localize vars each time.
+
+    left_arrow = '&nbsp;&#187;';
+    ellips     = '&nbsp;...';
+    top        = 1;
+%]
+    
+<div id="fly_out_menu">
+ <ul id="[% menu.id || 'navmenu' %]">
+
+  [% INCLUDE menu_items 
+        items = menu.items 
+    %]
+
+ </ul><!-- end [% menu.id || 'navmenu' %] -->
+</div>
+
+[% BLOCK menu_items %]
+ [% FOR i = items %]
+ 
+ <!-- start [% i.txt %] -->
+ <li><a class="[% i.class %]" 
+       href="[% c.uri_for(i.href) %]">
+       [% i.txt %][% IF i.exists('items') && !top; 
+                        left_arrow; 
+                     END %]</a>
+  [% IF i.exists('items') %]
+   
+   <ul>
+   
+    [% INCLUDE menu_items
+        top = top ? 0 : 1
+        items = i.items
+        %]
+        
+   </ul>
+   
+  [% END %]
+  
+ </li>
+ <!-- end [% i.txt %] -->
+ 
+ [% END %]
+[% END %]

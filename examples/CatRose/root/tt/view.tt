@@ -1,0 +1,52 @@
+[% # generic way to view a form object's internal values
+    # we use <form> wrapper just to abuse CSS
+
+    UNLESS (items.defined && items.size);
+        items = form.field_names;
+    END;
+    
+    #PROCESS form.dump;
+    
+    page.css.push('form');
+
+%]
+
+<form action="none">
+ <fieldset>
+  [% IF title %]<legend>[% title %]</legend>[% END %]
+  
+  [% FOR i = items %]
+  
+    [% NEXT IF skip.$i %]
+    
+    [% form.field(i).xhtml_label %]
+    <span class="input">
+     [% IF form.field(i).can('choices');
+     
+            form.field(i).value_label;
+            
+        ELSIF form.field(i).isa('Rose::HTML::Form::Field::TextArea');
+        
+            "<pre>"; form.field(i).output_value; "</pre>";
+        
+        ELSIF form.field(i).isa('Rose::HTML::Form::Field::DateTime')
+              AND
+              !form.field(i).internal_value.epoch;
+            # avoid the 1969 date
+            '';
+        
+        ELSE;
+        
+            form.field(i).output_value;
+        
+        END %]
+    <!-- [% i %] --></span>
+    <br />
+ 
+  [% END %]
+ </fieldset>
+</form>
+
+[% IF edit_link %]
+<div><a href="[% edit_link %]">Edit this record</a></div>
+[% END %]

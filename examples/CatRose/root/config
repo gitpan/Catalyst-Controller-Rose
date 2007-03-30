@@ -1,0 +1,2 @@
+[% # master templates config %]
+[% bullet  = '&nbsp;&#183;&nbsp;' %]

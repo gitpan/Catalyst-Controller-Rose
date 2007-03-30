@@ -1,0 +1,30 @@
+/* base CSS */
+
+body  
+{ 
+	font-family: verdana, arial, sans-serif;
+    background-color: #748f98;
+}
+
+#page
+{
+    background-color: #fff;
+    border: solid 1px #aaa;
+    margin: 4px;
+    padding: 1em;
+}
+
+a 
+{
+	color: #075185;
+}
+
+a:hover 
+{
+	color: #CC7744;
+}
+
+#error
+{
+    color: red;
+}

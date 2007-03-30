@@ -1,0 +1,78 @@
+[%  page.js.push(
+        'prototype'
+        'atomic_eip'
+        'scriptaculous/effects'
+        'scriptaculous/controls'
+        );
+        
+    page.css.push('form');
+                
+    fields = {
+      order = [
+        'title'
+        'artist'
+        ],
+      ro => {}
+    };
+    
+%]
+
+<div id="song">
+ <form  method="post"
+        action="[% c.uri_for('/album', object_id, 'save') %]"
+        />
+        
+    <fieldset>
+     <legend>Edit Album</legend>
+     
+     [% IF object_id %]
+     
+        <label>ID</label>
+        <span class="input">[% object_id %]</span>
+        <br />
+     
+     [% END %]
+     
+     [% PROCESS tt/edit.tt %]
+   
+   </fieldset>
+ </form>
+</div>
+
+
+[% IF songs %]
+<div class="eip_wrap">
+
+ <div>
+ <div>Edit associated Songs [% bullet %]
+ <a href="/song/create">Create a new, unassociated Song</a>
+ </div>
+ 
+ <div>
+ Tip: 
+ <br />
+ These songs are saved and associated with this album.
+ <br />
+ You can create new songs or associate existing songs using
+ the autocompletion feature.
+ <br />
+ If you leave the Artist field blank, the album's artist value
+ is assumed.
+ </div>
+    
+ </div>
+ 
+  [% PROCESS tt/eip.tt
+            eip = {
+                columns = songs.columns
+                rows    = songs.rows
+                url     = c.uri_for('/album', object_id, 'song')
+                name    = 'album_songs_eip'
+                tmpl    = songs.tmpl
+                add_row = songs.add_row
+                };
+                
+     %]
+    
+</div>
+[% END %]

@@ -1,0 +1,22 @@
+[% 
+    search.form = {
+        action      = c.uri_for('/album/search/')
+        view        = c.uri_for('/album')
+        target_meth = 'edit'
+        title       = 'Album Search'
+        fields      = [ 'title' 'artist' ]
+    };
+    column = {
+           widths = {
+               title    = 250
+               artist   = 200
+           },
+           order = [
+               'title'
+               'artist'
+           ]
+    };
+    
+ PROCESS tt/search/form.tt;
+ 
+%]

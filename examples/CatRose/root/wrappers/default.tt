@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+[% page.css.unshift('catrose' 'nav_menu') %]
+[% PROCESS header.tt %]
+
+<body> 
+ <div id="page">
+ <h1>CatRose</h1>
+ <h3>Catalyst and Rose::HTML::Objects/Rose::DB::Object Example</h3>
+ 
+ [% IF page.error OR error %]
+  <div id="error">
+   [% page.error || error %]
+  </div>
+ [% END %]
+ 
+ [% PROCESS tt/menu.tt %]
+
+ [% content %]
+ 
+ </div>
+</body>
+</html>

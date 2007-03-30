@@ -1,0 +1,27 @@
+[% # this template is applied to the entire site 
+   # for html, it calls specific wrappers
+   # or defaults to generic xhtml wrapper
+   # and for non-html it just prints content
+%]
+[% IF page.format == 'html' %]
+
+    [% IF page.wrapper != 0 %]
+    
+        [% PROCESS "wrappers/$page.wrapper" %]
+        
+    [% ELSE %]
+        
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+   [% content %]
+</html>
+
+    [% END %]
+
+[% ELSIF page.format == 'xml' %]
+<?xml version="1.0" encoding="UTF-8"?>
+[%- content -%] 
+[% ELSE # plain text or .. %]
+[%- content -%]
+[% END %]

@@ -1,0 +1,70 @@
+<style>
+
+ span.required,
+ label.required
+ {
+    color: blue;
+    font-style:italic;
+ }
+
+</style>
+
+[%
+     page.css.push('form');
+     
+       FOR f = fields.order;
+       
+        IF (form.field(f).autocomplete);
+            u = form.field(f).url;
+            USE url = url( c.uri_for( u.0 ), u.1 );
+            PROCESS tt/autocomplete.tt
+                input = {
+                    label = form.field(f).xhtml_label
+                    url   = url
+                    id    = f
+                    value = form.field(f).input_value
+                    };
+                    
+        ELSIF (form.field(f).can('xhtml_checkbox'));
+            form.field(f).xhtml_label;
+            form.field(f).xhtml_checkbox;
+            
+        ELSIF (fields.ro.exists(f));
+            form.field(f).xhtml_label;
+            
+            "<span class='input'>";
+            IF form.field(f).isa('Rose::HTML::Form::Field::TextArea');
+                "<pre>"; form.field(f).output_value; "</pre>";
+            ELSE;
+                form.field(f).output_value;
+            END;
+            "</span>";
+            
+        ELSE;
+            form.field(f).xhtml_label;
+            form.field(f).xhtml;
+                        
+        END;
+        
+        "<br />
+        ";
+        
+       END;
+       
+%]
+    
+ <label></label>
+ <span class="input">
+  Required fields are <span class="required"><strong>marked</strong></span>.
+ </span>
+ <br />
+ 
+ <div id="error"></div>
+    
+ <label></label>    
+ <input type="submit" name="save" value="Save" />
+ <input type="reset" value="Restore" />
+ [% IF object_id %]
+    <input type="submit" name="_delete" value="Delete" 
+        onclick="return confirm('Really delete?')" />
+ [% END %]

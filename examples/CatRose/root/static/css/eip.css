@@ -1,0 +1,92 @@
+/* Edit in Place CSS for CatRose example application */
+
+input.eip
+{
+    display: inline;
+    padding: 0;
+    margin: 0;
+    font-size: 11px; /* should match the eip defs */
+}
+
+input[type=button].eip
+{
+    font-size: 11px;
+    border: 1px outset;
+    background-color: #fff;
+    padding: 0px 0px 2px 0px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input:hover[type=button].eip
+{
+    color: #000;
+    background: #D8E5E8;
+    cursor:pointer;
+    border: 1px inset;
+}
+
+div.eip
+{
+    border:1px solid #748f98;
+    background: #eee;
+    padding: 0;
+    margin: 6px;
+}
+
+table.eip
+{
+    margin: 0;
+    padding: 4px;
+    border: 1px solid #ddd;
+    table-layout: fixed;
+    background: #fff;
+}
+
+table.eip th
+{
+/* TODO fix the width of these so they don't jump */
+    background: #77a3b0;
+    color: #fff;
+    border: 1px solid #778;
+    text-align: left;
+    overflow: hidden;
+    padding-left: 4px;
+}
+
+table.eip tr.alternate 
+{ 
+    background-color:#E9F0F2; 
+}
+
+table.eip tr:hover 
+{ 
+    background-color: #fff3b3; 
+}
+
+table.eip td 
+{
+    font-size: 11px; /* should match the eip defs */
+    cursor:pointer; 
+    /* cursor:hand; */ /* IE ... */
+}
+
+table.eip tr.active, 
+table.eip tr.active:hover
+{
+    background-color: #ffffcc;
+}
+
+table.eip tr.error,
+table.eip tr.error:hover
+{ 
+    background-color: #eee; 
+}
+
+table.eip div.error
+{
+    color: red;
+    font-size: 12px;
+}
+
+

@@ -1,0 +1,22 @@
+[% 
+    search.form = {
+        action      = c.uri_for('/song/search/')
+        view        = c.uri_for('/song')
+        target_meth = 'edit'
+        title       = 'Song Search'
+        fields      = [ 'title' 'length' ]
+    };
+    column = {
+           widths = {
+               title    = 250
+               length   = 200
+           },
+           order = [
+               'title'
+               'length'
+           ]
+    };
+    
+ PROCESS tt/search/form.tt;
+ 
+%]

@@ -1,0 +1,195 @@
+/* form.css */
+
+.error
+{
+    font-size:95%;
+    color:red;
+    padding: 8px;
+}
+
+.floating_err
+{
+    color: red;
+    padding: 6px;
+    font-size: 95%;
+    border: 1px solid red;
+    background: #fff;
+    float:right;
+    width: 200px;
+}
+
+
+/* courtesy of  http://bajooter.com/node/22  */
+
+form
+{
+    clear:both;
+    margin: 10px;
+}
+
+
+form label
+{
+    font-weight: bold;
+
+}
+
+form div.wide input,
+form div.wide span.input
+{
+    float: none;
+    clear:both;
+    margin: 4px 100px;
+    display: inline;
+}
+    
+form label, 
+form input,
+form span.input
+{
+display: block;
+float: left;
+margin-bottom: 5px;
+margin-top:5px;
+}
+
+/* FF seems to like this, on mac anyway */
+form input
+{
+    margin-top: -1px;
+}
+
+
+form legend 
+{
+font-weight:bold;
+padding:5px;
+}
+
+form select 
+{
+display: inline;
+float:left;
+margin-bottom: 5px;
+margin-top: 5px;					
+}
+
+
+/* fieldset.narrow has narrower label column */
+form label
+{
+padding-right: 20px;				
+text-align: right;
+width: 150px;
+}
+
+form fieldset.narrow label
+{
+padding-right: 20px;				
+text-align: right;
+width: 95px;
+}
+
+form fieldset.wide label
+{
+padding-right: 20px;				
+text-align: right;
+width: 200px;
+}
+
+
+form br {
+clear: left;
+}
+
+form .submit 
+{
+display:inline;				
+float:none;						          
+margin-bottom:0px;
+
+/* ie 5.x hack - fixes margin bug 
+http://www.tantek.com/CSS/Examples/boxmodelhack.html*/
+margin-left:95px;						
+voice-family: "\"}\""; 
+voice-family: inherit;
+
+/* reset the margin back */
+margin-left:115px;
+margin-right:0px;
+margin-top:10px;											
+}
+
+form fieldset.list {
+border:0;
+float:left;
+margin-bottom:3px;
+}
+
+/* in case someone adds a legend */
+form fieldset.list legend {
+display:none;
+}
+
+form fieldset.list label, 
+form fieldset.list input {
+margin-bottom:2px;
+margin-top:2px;
+}
+
+form fieldset.list label {
+margin-left: 5px;					
+text-align:left;
+}		
+
+
+form fieldset.inline
+{
+    display:inline;
+    border:0;
+    float:left;
+    padding: 2px;
+    margin: 2px 2px 2px 0px;
+}
+form fieldset.inline label, 
+form fieldset.inline input {
+    margin: 2px;
+    padding: 2px;
+    display:inline;
+}
+
+form fieldset.inline label {
+    margin: 2px 10px 2px 0px;
+    padding: 2px;				
+    text-align:left;
+    display:inline;
+    font-weight: normal;
+    width:auto;
+}
+
+form .inline
+{
+    display: inline;
+    float:none;
+    margin: 0;
+    padding: 0;				
+}
+
+form div.plain,
+form div.plain input,
+form div.plain label
+{
+    clear:both;
+    float:none;
+    border:none;
+    width:auto;
+    display:inline;
+}
+
+form div.plain input,
+form div.plain label
+{
+    font-weight:normal;
+    padding: 1em;
+    margin: 0;
+}

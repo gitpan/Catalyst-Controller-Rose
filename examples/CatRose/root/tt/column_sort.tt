@@ -1,0 +1,44 @@
+[%
+    column.links = {};
+    # construct the new URLs based on params
+    # search.order is array of col/dir pairs
+    # every column needs an entry in links but
+    # may not be in current search.order
+    FOR col IN column.widths.keys;
+        
+        FOR pair IN search.order;
+
+            prop = pair.each.0;
+            dir  = pair.each.1;
+            
+            NEXT IF prop != col;
+            
+            # toggle the sort direction for current sorted column
+            IF ( dir == 'asc' );
+                column.links.$col.dir = 'desc';
+                column.links.$col.img = urls.asc_img;
+            
+            ELSE;
+                column.links.$col.dir = 'asc';
+                column.links.$col.img = urls.desc_img;
+            END;
+            
+        END;    # end FOR pair
+        
+        IF ( ! column.links.exists( col ));
+            # default is asc but show opposite
+            column.links.$col.dir = 'asc';
+            column.links.$col.img = urls.asc_img;
+        END;
+        
+        column.links.$col.order = (col _ ' ' _ column.links.$col.dir) | uri | html;
+        column.links.$col.href  = urls.search _ '&amp;o=' _ column.links.$col.order;
+        
+        # If we wanted to stay on same 'page' of results
+        # we'd append page=search.pager.current_page
+        # but that's not so useful. A re-sort resorts ALL results
+        # and not just the current page.
+        
+    END;    # end FOR col
+    
+%]

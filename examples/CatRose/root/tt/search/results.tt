@@ -1,0 +1,122 @@
+[% 
+    # this template called by tt/search/form.tt if there
+    # are any search results to display
+    #
+    
+    PROCESS tt/urls.tt;
+    IF !search.query.size;
+        search.query = { 'id' = '*' };
+    END;
+    USE uq              = URL( search.form.action, search.query );
+    urls.search         = "$uq";   # used to make col sort
+    urls.search_order   = urls.search;    # for pager
+    urls.view           = search.form.view;
+    
+    # the 'column' hash pre-defines the width of each column
+    # and the order of the columns.
+    # tt/column_sort.tt will fill out the sort urls.
+    # example:
+    #
+    # column = {
+    #       widths = {
+    #           username    = 180
+    #           account_id  = 180
+    #           lastname    = 180
+    #           email       = 200
+    #       },
+    #       order = [
+    #           'username'
+    #           'account_id'
+    #           'lastname'
+    #           'email'
+    #       ]
+    # };
+    
+    PROCESS tt/column_sort.tt;
+    row_counter = 0;
+    
+    page.css.push('search');
+    
+    key_col = search.form.key_col || 'id';
+
+%]
+
+[% BLOCK col_tags %]
+  <colgroup>
+   [% FOR f = column.order %]
+   <col width="[% column.widths.$f %]" />
+   [% END %]
+  </colgroup>
+[% END %]
+
+[% BLOCK col_heads %]
+  [% FOR f = column.order %]
+    <th onclick='window.location.href="[% column.links.$f.href %]";return false'>
+    
+     <a href="[% column.links.$f.href %]">[% form.field(f).label %]</a>
+     &nbsp;[% column.links.$f.img %]
+    
+    </th>
+  [% END %]
+[% END %]
+
+[% BLOCK table_row %]
+    [%
+    u = [ urls.view, r.$key_col, search.form.target_meth ];
+    u = u.join('/');
+    first = column.order.0;
+    %]
+    <tr onclick='window.location.href="[% u %]"'
+        class="result [%IF row_counter % 2 %]alternate[% END %]">    
+        <td id="result_id_[% r.id %]" title="[% r.id %]">
+          <a href="[% u %]" target="_parent" 
+            [% # return false so that tr onclick doesn't cause 2 requests 
+               # we have the link here only as a visual aid 
+               %]
+             onclick="return false" >[% r.$first %]</a></td>
+        [% FOR f = column.order.slice(1) %]
+         <td>[% IF r.$f.can('epoch') AND !r.$f.epoch;
+                 '&nbsp;';
+                ELSE;
+                 r.$f || '&nbsp;';
+                END;
+              %]</td>
+        [% END %]
+    </tr>
+[% END %]
+
+[% #**************************************************************
+   # end BLOCKs -- start main template 
+   #**************************************************************
+%]
+
+<div id="results">
+
+ <div style="text-align:center">
+ [% search.pager.total_entries %] total matches
+ </div>
+ 
+ [% PROCESS tt/search/pager.tt %]
+
+ <table id="results_header" class="results" align="center">    
+  [% PROCESS col_tags %]
+  <tbody>
+   <tr >
+    [% PROCESS col_heads %]
+   </tr>
+  </tbody>
+ </table>
+
+ <table id="results_body" class="results" align="center">
+  [% PROCESS col_tags %]
+  <tbody>
+    [% FOR r = search.results %]
+        [%  row_counter = row_counter + 1;
+            PROCESS table_row %]
+    [% END %]
+  </tbody>
+ </table>
+
+ [% PROCESS tt/search/pager.tt %]
+
+</div>
