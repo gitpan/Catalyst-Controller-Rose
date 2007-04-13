@@ -1,6 +1,6 @@
 package Catalyst::Controller::Rose;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 1;
 
@@ -13,7 +13,7 @@ Catalyst::Controller::Rose - RDBO and RHTMLO base classes for Catalyst
 =head1 DESCRIPTION
 
 Catalyst::Controller::Rose provides several base Controller classes
-for creating CRUD-style Catalyst applications use Rose::DB::Object
+for creating CRUD-style Catalyst applications using Rose::DB::Object
 and Rose::HTML::Objects.
 
 This class is simply a placeholder for an overall VERSION of the

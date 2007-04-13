@@ -4,3 +4,9 @@ Revision history for Perl extension Catalyst::Controller::Rose.
 	- original version; created by h2xs 1.23 with options
 		-XA -n Catalyst::Controller::Rose
 
+0.02    13 April 2007
+    * added R::H::F::F::Autocomplete as prereq in Makefile.PL
+    * fixed ILIKE test on db->driver in Search and Autocomplete
+    * moved examples/ dir into t/ to hide it from CPAN indexer
+
+

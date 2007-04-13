@@ -17,7 +17,7 @@ sub find
     my $class    = $c->model($self->model_name)->name;
     my $db       = $class->new->db;
     my $is_ilike = 0;
-    if ($db->driver =~ m/psql/i)
+    if ($db->driver eq 'pg')
     {
         $is_ilike = 1;
     }
