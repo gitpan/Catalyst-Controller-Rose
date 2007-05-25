@@ -6,6 +6,8 @@ use base qw( Catalyst::Controller );
 
 use Carp;
 
+our $VERSION = '0.02';
+
 # should override the following methods in your subclass
 sub form_class  { croak "you must override form_class() or auto()" }
 sub init_form   { croak "you must override init_form()" }
@@ -136,14 +138,20 @@ sub save : PathPart Chained('fetch') Args(0)
     my $ometh = $self->init_object;
     my $fmeth = $self->init_form;
     my $id    = $c->stash->{object_id};
+    
+    # initialize the form with the object's values
+    $f->$fmeth($o);
 
+    # set param values from request
     $f->params($self->_param_hash($c));
 
     # id always comes from url not form
     $f->param('id', $id);
 
+    # override object's values with those from params
     $f->init_fields();
 
+    # return if there was a problem with any param values
     unless ($f->validate())
     {
         $c->stash->{page}->{error} = $f->error;    # NOT stash->{error}
@@ -151,6 +159,7 @@ sub save : PathPart Chained('fetch') Args(0)
         return 0;
     }
 
+    # re-set object's values from the now-valid form
     $f->$ometh($o);
 
     # set id explicitly since there's some bug with param() setting it above
@@ -159,6 +168,7 @@ sub save : PathPart Chained('fetch') Args(0)
     # let serial column work its magic
     $o->id(undef) if (!$o->id or $o->id == 0 or $id == 0);
 
+    # write our changes
     unless ($self->precommit($c, $o))
     {
         $c->stash->{template} ||= $self->template;
@@ -166,13 +176,6 @@ sub save : PathPart Chained('fetch') Args(0)
     }
     $self->save_obj($c, $o);
     $self->postcommit($c, $o);
-
-    #$c->log->debug("postcommit done");
-
-    # in case it was new, put db vals back into form for stickiness
-    # NOTE that for sane security, postcommit() should redirect
-    # and this is ignored but for ease we do it anyway.
-    $f->$fmeth($o);
 
     1;
 }

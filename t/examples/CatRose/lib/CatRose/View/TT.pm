@@ -70,12 +70,12 @@ sub as_json
 }
 
 $Template::Stash::HASH_OPS->{dump}   = \&dump_data;
-$Template::Stash::ARRAY_OPS->{dump}  = \&dump_data;
+$Template::Stash::LIST_OPS->{dump}  = \&dump_data;
 $Template::Stash::SCALAR_OPS->{dump} = \&dump_data;
 
 # as_json virt method dumps value as a JSON string
 $Template::Stash::HASH_OPS->{as_json}   = \&as_json;
-$Template::Stash::ARRAY_OPS->{as_json}  = \&as_json;
+$Template::Stash::LIST_OPS->{as_json}  = \&as_json;
 $Template::Stash::SCALAR_OPS->{as_json} = \&as_json;
 
 my $thishost;

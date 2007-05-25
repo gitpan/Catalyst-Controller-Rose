@@ -9,4 +9,6 @@ Revision history for Perl extension Catalyst::Controller::Rose.
     * fixed ILIKE test on db->driver in Search and Autocomplete
     * moved examples/ dir into t/ to hide it from CPAN indexer
 
+0.03    25 May 2007
+    * fixed form/object initialization logic in CRUD controller
 

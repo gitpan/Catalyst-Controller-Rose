@@ -6,6 +6,8 @@ use base qw( Catalyst::Controller::Rose::CRUD );
 use Carp;
 use JSON::Syck;
 
+sub template { 'tt/eip_tbody.tt' }   # sane default
+
 sub eip_fields
 {
     my $self = shift;
