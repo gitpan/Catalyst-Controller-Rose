@@ -2,22 +2,24 @@ package Catalyst::Controller::Rose::CRUD;
 
 use strict;
 use warnings;
-use base qw( Catalyst::Controller );
+use base qw( Catalyst::Controller::Rose );
 
-use Carp;
-
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
 # should override the following methods in your subclass
-sub form_class  { croak "you must override form_class() or auto()" }
-sub init_form   { croak "you must override init_form()" }
-sub init_object { croak "you must override init_object()" }
-sub template    { croak "you must override template()" }
-sub model_name  { croak "you must override model_name()" }
+sub form_class
+{
+    shift->throw_error("you must override form_class() or auto()");
+}
+sub init_form   { shift->throw_error("you must override init_form()") }
+sub init_object { shift->throw_error("you must override init_object()") }
+sub template    { shift->throw_error("you must override template()") }
+sub model_name  { shift->throw_error("you must override model_name()") }
 
 # optional callbacks -- see save()
-sub precommit  { 1 }
+sub precommit { 1 }
 
+# authorization checks
 sub can_read  { 1 }
 sub can_write { 1 }
 
@@ -29,20 +31,10 @@ sub auto : Private
     1;
 }
 
-sub check_err
-{
-    my ($self, $c) = @_;
-    if (@{$c->error} or $c->stash->{error})
-    {
-        return 0;
-    }
-    return 1;
-}
-
 sub default : Private
 {
     my ($self, $c, @args) = @_;
-    $c->log->error("no action defined for the default() CRUD method");
+    $c->log->warn("no action defined for the default() CRUD method");
 }
 
 # Mon Mar 19 16:35:20 CDT 2007
@@ -62,9 +54,9 @@ sub fetch : Chained('/') PathPrefix CaptureArgs(1)
     $c->stash->{object_id} = $id;
     my @arg = $id ? (id => $id) : ();
     $c->stash->{object} = $c->model($self->model_name)->fetch(@arg);
-    unless ($self->check_err($c) and $c->stash->{object})
+    if ($self->has_errors($c) or !$c->stash->{object})
     {
-        $c->stash->{error} = 'No such ' . $self->model_name;
+        $self->throw_error('No such ' . $self->model_name);
     }
 }
 
@@ -78,10 +70,10 @@ sub create : Local
 sub edit : PathPart Chained('fetch') Args(0)
 {
     my ($self, $c) = @_;
-    return unless $self->check_err($c);
+    return if $self->has_errors($c);
     unless ($self->can_write($c))
     {
-        $c->stash->{error} = 'Permission denied';
+        $self->throw_error('Permission denied');
         return;
     }
     my $meth = $self->init_form;
@@ -94,16 +86,15 @@ sub edit : PathPart Chained('fetch') Args(0)
 sub view : PathPart Chained('fetch') Args(0)
 {
     my ($self, $c) = @_;
-    return unless $self->check_err($c);
+    return if $self->has_errors($c);
     unless ($self->can_read($c))
     {
-        $c->stash->{error} = 'Permission denied';
+        $self->throw_error('Permission denied');
         return;
     }
     my $meth = $self->init_form;
     $c->stash->{form}->$meth($c->stash->{object});
 }
-
 
 sub save_obj
 {
@@ -113,7 +104,7 @@ sub save_obj
 
 sub _param_hash
 {
-    my ($self,$c) = @_;
+    my ($self, $c) = @_;
     return $c->request->params;
 }
 
@@ -127,10 +118,10 @@ sub save : PathPart Chained('fetch') Args(0)
         $c->detach('rm');
     }
 
-    return unless $self->check_err($c);
+    return if $self->has_errors($c);
     unless ($self->can_write($c))
     {
-        $c->stash->{error} = 'Permission denied';
+        $self->throw_error('Permission denied');
         return;
     }
     my $f     = $c->stash->{form};
@@ -138,7 +129,7 @@ sub save : PathPart Chained('fetch') Args(0)
     my $ometh = $self->init_object;
     my $fmeth = $self->init_form;
     my $id    = $c->stash->{object_id};
-    
+
     # initialize the form with the object's values
     $f->$fmeth($o);
 
@@ -154,7 +145,7 @@ sub save : PathPart Chained('fetch') Args(0)
     # return if there was a problem with any param values
     unless ($f->validate())
     {
-        $c->stash->{page}->{error} = $f->error;    # NOT stash->{error}
+        $c->stash->{page}->{error} = $f->error;    # NOT throw_error()
         $c->stash->{template} ||= $self->template; # MUST specify
         return 0;
     }
@@ -183,10 +174,10 @@ sub save : PathPart Chained('fetch') Args(0)
 sub rm : PathPart Chained('fetch') Args(0)
 {
     my ($self, $c) = @_;
-    return unless $self->check_err($c);
+    return if $self->has_errors($c);
     unless ($self->can_write($c))
     {
-        $c->stash->{error} = 'Permission denied';
+        $self->throw_error('Permission denied');
         return;
     }
 
@@ -237,18 +228,6 @@ Catalyst::Controller::Rose::CRUD - RDBO and RHTMLO for Catalyst CRUD apps
  sub init_object { 'somecrud_from_form' }
  sub template    { 'path/to/somecrud/edit.xhtml' }
  sub model_name  { 'SomeCrud' }
-
- sub fetch : PathPart('cool/url/somecrud') Chained('/') CaptureArgs(1)
- {
-    my ($self, $c, $id) = @_;
-    $c->stash->{object_id} = $id;
-    my @arg = $id ? (id => $id) : ();
-    $c->stash->{object} = $c->model($self->model_name)->fetch(@arg);
-    unless ($self->check_err($c) and $c->stash->{object})
-    {
-        $c->stash->{error} = 'No such Crud';
-    }
- }
 
  1;
 
@@ -314,7 +293,7 @@ key in the stash().
 =head2 default
 
 Doesn't do anything except satisfy the Catalyst namespace conventions.
-An error will be written to your log if anyone hits the URL that the default()
+A warning will be written to your log if anyone hits the URL that the default()
 method maps to (if any).
 
 
@@ -372,10 +351,6 @@ Called by save() and rm() after the db commit.
 
 postcommit() is intended to be overridden in your subclass, although the
 default behaviour is sane.
-
-=head2 check_err( I<context> )
-
-Returns true if there are no errors in I<context>, false if there are errors.
 
 =head2 can_read( I<context> )
 

@@ -1,6 +1,23 @@
 package Catalyst::Controller::Rose;
 
-our $VERSION = '0.03';
+use base qw( Catalyst::Controller );
+
+use Catalyst::Exception;
+
+our $VERSION = '0.04';
+
+sub has_errors
+{
+    my ($self, $c) = @_;
+    return scalar(@{$c->error}) || $c->stash->{error} || 0;
+}
+
+sub throw_error
+{
+    my ($self, $msg) = @_;
+    $msg ||= 'unknown error';
+    Catalyst::Exception->throw($msg);
+}
 
 1;
 
@@ -16,8 +33,24 @@ Catalyst::Controller::Rose provides several base Controller classes
 for creating CRUD-style Catalyst applications using Rose::DB::Object
 and Rose::HTML::Objects.
 
-This class is simply a placeholder for an overall VERSION of the
+This class provides a common base class with utility methods
+and an overall VERSION of the
 Catalyst::Controller::Rose namespace.
+
+=head1 METHODS
+
+=head2 has_errors( I<context> )
+
+Returns true if I<context> error() method has any errors set or if the
+C<error> value in stash() is set. Otherwise returns false (no errors).
+
+=head2 throw_error( I<msg> )
+
+Throws Catalyst::Exception with I<msg>. Since this method is available in
+every Catalyst::Controller::Rose subclass, you can customize error handling
+in each of your subclass controllers.
+
+=cut
 
 =head1 SEE ALSO
 

@@ -3,10 +3,9 @@ use strict;
 use warnings;
 use base qw( Catalyst::Controller::Rose::CRUD );
 
-use Carp;
 use JSON::Syck;
 
-sub template { 'tt/eip_tbody.tt' }   # sane default
+sub template { 'tt/eip_tbody.tt' }    # sane default
 
 sub eip_fields
 {
@@ -40,7 +39,7 @@ sub eip_table : Private
 
     unless (exists $arg{data})
     {
-        croak "data required";
+        $self->throw_error("data required");
     }
 
     my $fc        = $arg{form_class} || $self->form_class;
@@ -73,9 +72,6 @@ sub eip_table : Private
     }
 
     $c->stash->{id_joiner} = $self->eip_id_joiner;
-
-    #carp "eip: " . dump \%eip;
-
     return \%eip;
 }
 
@@ -168,8 +164,6 @@ sub postcommit
     my $tmpl = $c->stash->{eip}->{_tmpl};
 
     # mimic TT by creating auto and widths values based on tmpl
-    #carp dump $tmpl;
-
     my ($auto, $widths);
 
     for my $col (@{$tmpl->{cols}})
@@ -181,7 +175,7 @@ sub postcommit
         $widths->{$col->{name}} = $col->{width} / 10;
     }
 
-    $c->stash->{rc} = $c->req->param('_rc') || 0;   # default is !alternate
+    $c->stash->{rc} = $c->req->param('_rc') || 0;    # default is !alternate
     $c->stash->{template} = $self->template;
     my $cols = $self->eip_set_cols($c->stash->{form}, $self->eip_fields);
     my $cells =
@@ -227,13 +221,13 @@ sub rm : PathPart Chained('fetch') Args(0)
 sub edit
 {
     my ($self, $c) = @_;
-    croak "no such EIP action: edit";
+    $self->throw_error("no such EIP action: edit");
 }
 
 sub view
 {
     my ($self, $c) = @_;
-    croak "no such EIP action: view";
+    $self->throw_error("no such EIP action: view");
 }
 
 1;

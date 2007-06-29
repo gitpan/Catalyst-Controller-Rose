@@ -24,7 +24,7 @@ sub fetch : PathPart('song') Chained('/album/fetch') CaptureArgs(1)
 {
     my ($self, $c, $id) = @_;
 
-    unless ($self->check_err($c) and $c->stash->{object}->id)
+    if ($self->has_errors($c) or !$c->stash->{object}->id)
     {
         $c->stash->{error} = 'No such album.';
         return;
@@ -41,7 +41,7 @@ sub fetch : PathPart('song') Chained('/album/fetch') CaptureArgs(1)
     # now fetch our album
     my @arg = $id ? (id => $id) : ();
     $c->stash->{object} = $c->model($self->model_name)->fetch(@arg);
-    unless ($self->check_err($c))
+    if ($self->has_errors($c))
     {
         $c->stash->{error} = 'bad Song record';
         return;
@@ -54,11 +54,11 @@ sub save : PathPart Chained('fetch') Args(0)
     my ($self, $c) = @_;
 
     # fake the form params
-    unless($c->req->param('artist'))
+    unless ($c->req->param('artist'))
     {
-        $c->req->param( artist => $c->stash->{album}->artist );
+        $c->req->param(artist => $c->stash->{album}->artist);
     }
-    
+
     unless ($self->NEXT::save($c))
     {
         $c->response->status('500');

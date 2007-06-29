@@ -11,4 +11,13 @@ Revision history for Perl extension Catalyst::Controller::Rose.
 
 0.03    25 May 2007
     * fixed form/object initialization logic in CRUD controller
-
+    
+0.04
+    * changed check_err() to has_errors()
+    * moved has_errors() to base Rose class
+    * added throw_error() to base Rose class
+    * all controllers now inherit from Catalyst::Controller::Rose instead
+      of simply Catalyst::Controller.
+    * instead of setting 'error' value in stash(), CRUD methods now
+      call throw_error().
+    

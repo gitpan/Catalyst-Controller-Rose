@@ -29,13 +29,8 @@ sub view_on_single_result
 sub fetch : Chained('/') PathPrefix CaptureArgs(1)
 {
     my ($self, $c, $id) = @_;
-    $c->stash->{object_id} = $id;
-    my @arg = $id ? (id => $id) : ();
-    $c->stash->{object} = $c->model($self->model_name)->fetch(@arg);
-    unless ($self->check_err($c) and $c->stash->{object})
-    {
-        $c->stash->{error} = 'No such ' . $self->model_name;
-    }
+    $self->SUPER::fetch($c, $id);
+    return if $self->has_errors($c);
 
     # set up EIP for related songs
     my (@songs);
@@ -55,7 +50,7 @@ sub fetch : Chained('/') PathPrefix CaptureArgs(1)
 sub rm : PathPart Chained('fetch') Args(0)
 {
     my ($self, $c) = @_;
-    return unless $self->check_err($c);
+    return if $self->has_errors($c);
     unless ($self->can_write($c))
     {
         $c->stash->{error} = 'Permission denied';

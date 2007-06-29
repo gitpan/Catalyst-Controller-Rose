@@ -2,11 +2,9 @@ package Catalyst::Controller::Rose::Autocomplete;
 
 use strict;
 use warnings;
-use base qw( Catalyst::Controller );
+use base qw( Catalyst::Controller::Rose );
 
-use Carp;
-
-sub model_name { croak "must override model_name" }
+sub model_name { shift->throw_error("must override model_name") }
 
 sub find
 {
@@ -50,7 +48,7 @@ sub list : Local
     $q{q} = $c->req->param($q{c}) . '%';
 
     my $results = $self->find($c, \%q);
-    
+
     my @list;
     for my $r (@$results)
     {

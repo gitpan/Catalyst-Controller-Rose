@@ -2,16 +2,19 @@ package Catalyst::Controller::Rose::Search;
 
 use strict;
 use warnings;
-use base qw( Catalyst::Controller );
-use Carp;
+use base qw( Catalyst::Controller::Rose );
 use Data::Pageset;
 use Sort::SQL;
 
-sub model_name { croak "you must override model_name() or search()" }
+sub model_name
+{
+    shift->throw_error("you must override model_name() or search()");
+}
 
 sub make_form
 {
-    croak "you must either stash a form object or override make_form()";
+    shift->throw_error(
+                 "you must either stash a form object or override make_form()");
 }
 
 sub can_search            { 1 }

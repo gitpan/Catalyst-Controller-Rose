@@ -24,7 +24,7 @@ sub fetch : PathPart('album') Chained('/song/fetch') CaptureArgs(1)
 {
     my ($self, $c, $id) = @_;
 
-    unless ($self->check_err($c) and $c->stash->{object}->id)
+    if ($self->has_errors($c) or !$c->stash->{object}->id)
     {
         $c->stash->{error} = 'No such song.';
         return;
@@ -41,7 +41,7 @@ sub fetch : PathPart('album') Chained('/song/fetch') CaptureArgs(1)
     # now fetch our album
     my @arg = $id ? (id => $id) : ();
     $c->stash->{object} = $c->model($self->model_name)->fetch(@arg);
-    unless ($self->check_err($c))
+    if ($self->has_errors($c))
     {
         $c->stash->{error} = 'bad Album record';
         return;
@@ -74,6 +74,5 @@ sub save_obj
     $c->stash->{song}->add_albums($album);
     $c->stash->{song}->save;
 }
-
 
 1;
