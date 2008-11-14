@@ -4,7 +4,7 @@ use base qw( Catalyst::Controller );
 
 use Catalyst::Exception;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub has_errors
 {
@@ -25,9 +25,11 @@ __END__
 
 =head1 NAME
 
-Catalyst::Controller::Rose - RDBO and RHTMLO base classes for Catalyst
+Catalyst::Controller::Rose - **DEPRECATED** RDBO and RHTMLO base classes for Catalyst
 
 =head1 DESCRIPTION
+
+B<This package is deprecated. Please use CatalystX::CRUD instead.>
 
 Catalyst::Controller::Rose provides several base Controller classes
 for creating CRUD-style Catalyst applications using Rose::DB::Object

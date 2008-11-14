@@ -204,7 +204,7 @@ __END__
 
 =head1 NAME
 
-Catalyst::Controller::Rose::Search - base class for searching a RDBO model
+Catalyst::Controller::Rose::Search - **DEPRECATED** base class for searching a RDBO model
 
 =head1 SYNOPSIS
 
@@ -229,6 +229,8 @@ Catalyst::Controller::Rose::Search - base class for searching a RDBO model
  # or just http://yoururl/foo
  
 =head1 DESCRIPTION
+
+B<This package is deprecated. Please use CatalystX::CRUD instead.>
 
 Catalyst::Controller::Rose::Search provides controller access
 to many of the features of Catalyst::Model::RDBO.

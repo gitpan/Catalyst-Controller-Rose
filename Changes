@@ -20,4 +20,7 @@ Revision history for Perl extension Catalyst::Controller::Rose.
       of simply Catalyst::Controller.
     * instead of setting 'error' value in stash(), CRUD methods now
       call throw_error().
-    
+   
+0.05 14 Nov 2008
+    * deprecated in favor of CatalystX::CRUD
+ 

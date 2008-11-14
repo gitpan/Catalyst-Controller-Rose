@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw( Catalyst::Controller::Rose );
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 # should override the following methods in your subclass
 sub form_class
@@ -213,7 +213,7 @@ __END__
 
 =head1 NAME
 
-Catalyst::Controller::Rose::CRUD - RDBO and RHTMLO for Catalyst CRUD apps
+Catalyst::Controller::Rose::CRUD - **DEPRECATED** RDBO and RHTMLO for Catalyst CRUD apps
 
 =head1 SYNOPSIS
 
@@ -232,6 +232,8 @@ Catalyst::Controller::Rose::CRUD - RDBO and RHTMLO for Catalyst CRUD apps
  1;
 
 =head1 DESCRIPTION
+
+B<This package is deprecated. Please use CatalystX::CRUD instead.>
 
 This base controller is useful for creating scaffolding for your CRUD
 (Create, Read, Update, Delete) web applications.

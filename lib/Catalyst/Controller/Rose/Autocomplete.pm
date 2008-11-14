@@ -71,7 +71,7 @@ __END__
 
 =head1 NAME
 
-Catalyst::Controller::Rose::Autocomplete - RDBO/RHTMLO Ajax Autocompletion
+Catalyst::Controller::Rose::Autocomplete - **DEPRECATED** RDBO/RHTMLO Ajax Autocompletion
 
 =head1 SYNOPSIS
 
@@ -95,6 +95,8 @@ Catalyst::Controller::Rose::Autocomplete - RDBO/RHTMLO Ajax Autocompletion
                 %]
 
 =head1 DESCRIPTION
+
+B<This package is deprecated. Please use CatalystX::CRUD instead.>
 
 Catalyst::Controller::Rose::Autocomplete is a simple controller
 for answering client-side Ajax autocomplete requests. It is designed

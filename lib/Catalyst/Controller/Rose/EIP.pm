@@ -236,7 +236,7 @@ __END__
 
 =head1 NAME
 
-Catalyst::Controller::Rose::EIP - base class for Edit In Place tables
+Catalyst::Controller::Rose::EIP - **DEPRECATD** base class for Edit In Place tables
 
 =head1 SYNOPSIS
 
@@ -269,6 +269,8 @@ Catalyst::Controller::Rose::EIP - base class for Edit In Place tables
  
  
 =head1 DESCRIPTION
+
+B<This package is deprecated. Please use CatalystX::CRUD instead.>
 
 Catalyst::Controller::Rose::EIP is a base class for creating
 and managing Edit In Place tables.

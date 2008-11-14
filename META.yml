@@ -1,14 +1,17 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Catalyst-Controller-Rose
-version:      0.04
-version_from: lib/Catalyst/Controller/Rose.pm
-installdirs:  site
-requires:
+--- #YAML:1.0
+name:                Catalyst-Controller-Rose
+version:             0.05
+abstract:            **DEPRECATED** RDBO and RHTMLO base classes for Catalyst
+license:             ~
+author:              
+    - Peter Karman <pkarman@localdomain>
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
     Data::Pageset:                 0.01
     JSON::Syck:                    0.01
     Rose::HTMLx::Form::Field::Autocomplete: 0.01
     Sort::SQL:                     0.01
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
